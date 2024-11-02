@@ -6,11 +6,13 @@ const User = new graphql.GraphQLObjectType({
   name: "User",
   fields: () => ({
     id: { type: graphql.GraphQLString },
-    firstsName: { type: graphql.GraphQLString },
-    lastName: { type: graphql.GraphQLString },
+    firstname: {
+      type: graphql.GraphQLString,
+    },
+    lastname: { type: graphql.GraphQLString },
     adress: { type: graphql.GraphQLString },
     email: { type: graphql.GraphQLString },
-    phoneNumber: { type: graphql.GraphQLInt },
+    phonenumber: { type: graphql.GraphQLInt },
     password: { type: graphql.GraphQLString },
     // team: {
     //   type: Team,
@@ -45,35 +47,33 @@ Team._typeConfig = {
 
 const QueryRoot = new graphql.GraphQLObjectType({
   name: "Query",
-  fields: () => ({
-    hello: {
-      type: graphql.GraphQLString,
-      resolve: () => "Hello world!",
-    },
-    users: {
-      type: new graphql.GraphQLList(User),
-      resolve: () => {
-        client.query("select * from userprofile", [], (err, res) => {
-          if (err) {
-            console.log(err.message);
-            return err.message;
-          }
+  fields: () => {
+    return {
+      hello: {
+        type: graphql.GraphQLString,
+        resolve: () => "Hello world!",
+      },
+      users: {
+        type: new graphql.GraphQLList(User),
+        resolve: async () => {
+          const res = await client.query("select * from userprofile");
+          return res.rows;
+        },
+      },
+      user: {
+        type: User,
+        args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
+        where: (userTable, args, context) => `${userTable}.id = ${args.id}`,
+        resolve: async (args) => {
+          const res = await client.query(
+            `select * from userprofile where userprofile.id = ${args.id}`
+          );
           console.log(res.rows);
           return res.rows;
-        });
+        },
       },
-    },
-    player: {
-      type: User,
-      args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
-      where: (playerTable, args, context) => `${playerTable}.id = ${args.id}`,
-      resolve: (parent, args, context, resolveInfo) => {
-        return joinMonster.default(resolveInfo, {}, (sql) => {
-          return client.query(sql);
-        });
-      },
-    },
-  }),
+    };
+  },
 });
 
 const schema = new graphql.GraphQLSchema({ query: QueryRoot });
