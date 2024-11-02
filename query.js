@@ -6,9 +6,7 @@ const User = new graphql.GraphQLObjectType({
   name: "User",
   fields: () => ({
     id: { type: graphql.GraphQLString },
-    firstname: {
-      type: graphql.GraphQLString,
-    },
+    firstname: { type: graphql.GraphQLString },
     lastname: { type: graphql.GraphQLString },
     adress: { type: graphql.GraphQLString },
     email: { type: graphql.GraphQLString },
@@ -63,19 +61,58 @@ const QueryRoot = new graphql.GraphQLObjectType({
       user: {
         type: User,
         args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
-        where: (userTable, args, context) => `${userTable}.id = ${args.id}`,
-        resolve: async (args) => {
+        resolve: async (parent, args, context, resolveInfo) => {
           const res = await client.query(
             `select * from userprofile where userprofile.id = ${args.id}`
           );
           console.log(res.rows);
-          return res.rows;
+          return res.rows[0];
         },
       },
     };
   },
 });
 
-const schema = new graphql.GraphQLSchema({ query: QueryRoot });
+const MutationRoot = new graphql.GraphQLObjectType({
+  name: "Mutation",
+  fields: () => ({
+    user: {
+      type: User,
+      args: {
+        id: { type: graphql.GraphQLString },
+        firstname: { type: graphql.GraphQLString },
+        lastname: { type: graphql.GraphQLString },
+        adress: { type: graphql.GraphQLString },
+        email: { type: graphql.GraphQLString },
+        phonenumber: { type: graphql.GraphQLInt },
+        password: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, context, resolveInfo) => {
+        try {
+          return (
+            await client.query(
+              "INSERT INTO userprofile (firstName, lastName, address, email, phoneNumber, password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+              [
+                args.firstname,
+                args.lastname,
+                args.adress,
+                args.email,
+                args.phonenumber,
+                args.password,
+              ]
+            )
+          ).rows[0];
+        } catch (err) {
+          throw new Error("Failed to insert new player");
+        }
+      },
+    },
+  }),
+});
+
+const schema = new graphql.GraphQLSchema({
+  query: QueryRoot,
+  mutation: MutationRoot,
+});
 
 module.exports = schema;
