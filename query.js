@@ -64,7 +64,7 @@ const QueryRoot = new graphql.GraphQLObjectType({
         args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
         resolve: async (parent, args, context, resolveInfo) => {
           const res = await client.query(
-            `select * from userprofile where user_profile.id = ${args.id}`
+            `select * from userprofile where user_profile.user_id = ${args.id}`
           );
           console.log(res.rows);
           return res.rows[0];
@@ -76,6 +76,17 @@ const QueryRoot = new graphql.GraphQLObjectType({
         resolve: async () => {
           const res = await client.query("select * from product");
           return res.rows;
+        },
+      },
+
+      product: {
+        type: Product,
+        args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
+        resolve: async (parent, args, context, resolveInfo) => {
+          const res = await client.query(
+            `select * from product where product.product_id = ${args.id}`
+          );
+          return res.rows[0];
         },
       },
     };
