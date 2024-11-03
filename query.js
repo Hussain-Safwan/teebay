@@ -99,7 +99,7 @@ const MutationRoot = new graphql.GraphQLObjectType({
     user: {
       type: User,
       args: {
-        id: { type: graphql.GraphQLString },
+        user_id: { type: graphql.GraphQLString },
         firstname: { type: graphql.GraphQLString },
         lastname: { type: graphql.GraphQLString },
         adress: { type: graphql.GraphQLString },
@@ -111,7 +111,7 @@ const MutationRoot = new graphql.GraphQLObjectType({
         try {
           return (
             await client.query(
-              "INSERT INTO userprofile (firstName, lastName, address, email, phoneNumber, password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+              "INSERT INTO user_profile (firstName, lastName, address, email, phoneNumber, password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
               [
                 args.firstname,
                 args.lastname,
@@ -123,7 +123,48 @@ const MutationRoot = new graphql.GraphQLObjectType({
             )
           ).rows[0];
         } catch (err) {
-          throw new Error("Failed to insert new player");
+          throw new Error("Failed to insert new user");
+        }
+      },
+    },
+  }),
+
+  fields: () => ({
+    product: {
+      type: Product,
+      args: {
+        product_id: { type: graphql.GraphQLString },
+        title: { type: graphql.GraphQLString },
+        description: { type: graphql.GraphQLString },
+        categories: { type: graphql.GraphQLString },
+        selling_price: { type: graphql.GraphQLInt },
+        renting_price: { type: graphql.GraphQLInt },
+        renting_price_unit: { type: graphql.GraphQLString },
+        user_id: { type: graphql.GraphQLString },
+        bought_by: { type: graphql.GraphQLString },
+        rented_by: { type: graphql.GraphQLString },
+        creating_date: { type: graphql.GraphQLString },
+        buying_date: { type: graphql.GraphQLString },
+        renting_date: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, context, resolveInfo) => {
+        try {
+          return (
+            await client.query(
+              "INSERT INTO product (title, description, categories, selling_price, renting_price, renting_price_unit, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+              [
+                args.title,
+                args.description,
+                args.categories,
+                args.selling_price,
+                args.renting_price,
+                args.renting_price_unit,
+                args.user_id,
+              ]
+            )
+          ).rows[0];
+        } catch (err) {
+          throw new Error(err.message);
         }
       },
     },
