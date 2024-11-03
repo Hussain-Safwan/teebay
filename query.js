@@ -12,11 +12,6 @@ const User = new graphql.GraphQLObjectType({
     email: { type: graphql.GraphQLString },
     phonenumber: { type: graphql.GraphQLInt },
     password: { type: graphql.GraphQLString },
-    // team: {
-    //   type: Team,
-    //   sqlJoin: (playerTable, teamTable, args) =>
-    //     `${playerTable}.team_id = ${teamTable}.id`,
-    // },
   }),
 });
 
@@ -25,21 +20,27 @@ User._typeConfig = {
   uniqueKey: "id",
 };
 
-var Team = new graphql.GraphQLObjectType({
-  name: "Team",
+const Product = new graphql.GraphQLObjectType({
+  name: "Product",
   fields: () => ({
-    id: { type: graphql.GraphQLInt },
-    name: { type: graphql.GraphQLString },
-    players: {
-      type: graphql.GraphQLList(Player),
-      sqlJoin: (teamTable, playerTable, args) =>
-        `${teamTable}.id = ${playerTable}.team_id`,
-    },
+    product_id: { type: graphql.GraphQLString },
+    title: { type: graphql.GraphQLString },
+    description: { type: graphql.GraphQLString },
+    categories: { type: graphql.GraphQLString },
+    selling_price: { type: graphql.GraphQLInt },
+    renting_price: { type: graphql.GraphQLInt },
+    renting_price_unit: { type: graphql.GraphQLString },
+    user_id: { type: graphql.GraphQLString },
+    bought_by: { type: graphql.GraphQLString },
+    rented_by: { type: graphql.GraphQLString },
+    creating_date: { type: graphql.GraphQLString },
+    buying_date: { type: graphql.GraphQLString },
+    renting_date: { type: graphql.GraphQLString },
   }),
 });
 
-Team._typeConfig = {
-  sqlTable: "team",
+Product._typeConfig = {
+  sqlTable: "product",
   uniqueKey: "id",
 };
 
@@ -54,7 +55,7 @@ const QueryRoot = new graphql.GraphQLObjectType({
       users: {
         type: new graphql.GraphQLList(User),
         resolve: async () => {
-          const res = await client.query("select * from userprofile");
+          const res = await client.query("select * from user_profile");
           return res.rows;
         },
       },
@@ -63,10 +64,18 @@ const QueryRoot = new graphql.GraphQLObjectType({
         args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
         resolve: async (parent, args, context, resolveInfo) => {
           const res = await client.query(
-            `select * from userprofile where userprofile.id = ${args.id}`
+            `select * from userprofile where user_profile.id = ${args.id}`
           );
           console.log(res.rows);
           return res.rows[0];
+        },
+      },
+
+      products: {
+        type: new graphql.GraphQLList(Product),
+        resolve: async () => {
+          const res = await client.query("select * from product");
+          return res.rows;
         },
       },
     };
