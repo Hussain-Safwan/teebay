@@ -206,7 +206,7 @@ const MutationRoot = new graphql.GraphQLObjectType({
         try {
           const boughtBy =
             args.bought_by === "return" ? "NULL" : "'" + args.bought_by + "'";
-          const date = args.boughtBy === "return" ? "NULL" : "NOW()";
+          const date = args.bought_by === "return" ? "NULL" : "NOW()";
           return (
             await client.query(
               `UPDATE product 
@@ -214,6 +214,36 @@ const MutationRoot = new graphql.GraphQLObjectType({
                   bought_by = ${boughtBy}, 
                   buying_date = ${date}
 
+              where product_id = \'${args.product_id}\'
+              
+              RETURNING *`,
+              []
+            )
+          ).rows[0];
+        } catch (err) {
+          throw new Error(err.message);
+        }
+      },
+    },
+
+    rent_product: {
+      type: Product,
+      args: {
+        product_id: { type: graphql.GraphQLString },
+        rented_by: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, context, resolveInfo) => {
+        try {
+          const rentedBy =
+            args.rented_by === "return" ? "NULL" : "'" + args.rented_by + "'";
+          const date = args.rented_by === "return" ? "NULL" : "NOW()";
+          return (
+            await client.query(
+              `UPDATE product 
+              SET
+                  rented_by = ${rentedBy}, 
+                  renting_date = ${date}
+  
               where product_id = \'${args.product_id}\'
               
               RETURNING *`,
