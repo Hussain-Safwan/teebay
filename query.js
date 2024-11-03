@@ -195,6 +195,36 @@ const MutationRoot = new graphql.GraphQLObjectType({
         }
       },
     },
+
+    buy_product: {
+      type: Product,
+      args: {
+        product_id: { type: graphql.GraphQLString },
+        bought_by: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, context, resolveInfo) => {
+        try {
+          const boughtBy =
+            args.bought_by === "return" ? "NULL" : "'" + args.bought_by + "'";
+          const date = args.boughtBy === "return" ? "NULL" : "NOW()";
+          return (
+            await client.query(
+              `UPDATE product 
+              SET
+                  bought_by = ${boughtBy}, 
+                  buying_date = ${date}
+
+              where product_id = \'${args.product_id}\'
+              
+              RETURNING *`,
+              []
+            )
+          ).rows[0];
+        } catch (err) {
+          throw new Error(err.message);
+        }
+      },
+    },
   }),
 });
 
