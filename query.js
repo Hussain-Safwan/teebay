@@ -99,7 +99,6 @@ const MutationRoot = new graphql.GraphQLObjectType({
     user: {
       type: User,
       args: {
-        user_id: { type: graphql.GraphQLString },
         firstname: { type: graphql.GraphQLString },
         lastname: { type: graphql.GraphQLString },
         adress: { type: graphql.GraphQLString },
@@ -127,13 +126,10 @@ const MutationRoot = new graphql.GraphQLObjectType({
         }
       },
     },
-  }),
 
-  fields: () => ({
     product: {
       type: Product,
       args: {
-        product_id: { type: graphql.GraphQLString },
         title: { type: graphql.GraphQLString },
         description: { type: graphql.GraphQLString },
         categories: { type: graphql.GraphQLString },
@@ -141,11 +137,6 @@ const MutationRoot = new graphql.GraphQLObjectType({
         renting_price: { type: graphql.GraphQLInt },
         renting_price_unit: { type: graphql.GraphQLString },
         user_id: { type: graphql.GraphQLString },
-        bought_by: { type: graphql.GraphQLString },
-        rented_by: { type: graphql.GraphQLString },
-        creating_date: { type: graphql.GraphQLString },
-        buying_date: { type: graphql.GraphQLString },
-        renting_date: { type: graphql.GraphQLString },
       },
       resolve: async (parent, args, context, resolveInfo) => {
         try {
@@ -161,6 +152,42 @@ const MutationRoot = new graphql.GraphQLObjectType({
                 args.renting_price_unit,
                 args.user_id,
               ]
+            )
+          ).rows[0];
+        } catch (err) {
+          throw new Error(err.message);
+        }
+      },
+    },
+
+    update_product: {
+      type: Product,
+      args: {
+        product_id: { type: graphql.GraphQLString },
+        title: { type: graphql.GraphQLString },
+        description: { type: graphql.GraphQLString },
+        categories: { type: graphql.GraphQLString },
+        selling_price: { type: graphql.GraphQLInt },
+        renting_price: { type: graphql.GraphQLInt },
+        renting_price_unit: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, context, resolveInfo) => {
+        try {
+          return (
+            await client.query(
+              `UPDATE product 
+              SET
+                  title = \'${args.title}\', 
+                  description = \'${args.description}\', 
+                  categories = \'${args.categories}\', 
+                  selling_price = \'${args.selling_price}\', 
+                  renting_price = \'${args.renting_price}\',
+                  renting_price_unit = \'${args.renting_price_unit}\'
+
+              where product_id = \'${args.product_id}\'
+              
+              RETURNING *`,
+              []
             )
           ).rows[0];
         } catch (err) {
