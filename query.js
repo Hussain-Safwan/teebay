@@ -1,48 +1,7 @@
 const graphql = require("graphql");
 const joinMonster = require("join-monster");
 const client = require("./dbClient");
-
-const User = new graphql.GraphQLObjectType({
-  name: "User",
-  fields: () => ({
-    id: { type: graphql.GraphQLString },
-    firstname: { type: graphql.GraphQLString },
-    lastname: { type: graphql.GraphQLString },
-    adress: { type: graphql.GraphQLString },
-    email: { type: graphql.GraphQLString },
-    phonenumber: { type: graphql.GraphQLInt },
-    password: { type: graphql.GraphQLString },
-  }),
-});
-
-User._typeConfig = {
-  sqlTable: "userprofile",
-  uniqueKey: "id",
-};
-
-const Product = new graphql.GraphQLObjectType({
-  name: "Product",
-  fields: () => ({
-    product_id: { type: graphql.GraphQLString },
-    title: { type: graphql.GraphQLString },
-    description: { type: graphql.GraphQLString },
-    categories: { type: graphql.GraphQLString },
-    selling_price: { type: graphql.GraphQLInt },
-    renting_price: { type: graphql.GraphQLInt },
-    renting_price_unit: { type: graphql.GraphQLString },
-    user_id: { type: graphql.GraphQLString },
-    bought_by: { type: graphql.GraphQLString },
-    rented_by: { type: graphql.GraphQLString },
-    creating_date: { type: graphql.GraphQLString },
-    buying_date: { type: graphql.GraphQLString },
-    renting_date: { type: graphql.GraphQLString },
-  }),
-});
-
-Product._typeConfig = {
-  sqlTable: "product",
-  uniqueKey: "id",
-};
+const { User, Product, Response } = require("./schema");
 
 const QueryRoot = new graphql.GraphQLObjectType({
   name: "Query",
@@ -59,14 +18,23 @@ const QueryRoot = new graphql.GraphQLObjectType({
           return res.rows;
         },
       },
-      user: {
+      login: {
         type: User,
-        args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
+        args: {
+          email: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
+          password: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
+        },
         resolve: async (parent, args, context, resolveInfo) => {
           const res = await client.query(
-            `select * from userprofile where user_profile.user_id = ${args.id}`
+            `select * from user_profile where user_profile.email = \'${args.email}\'`
           );
-          console.log(res.rows);
+
+          if (res.rows.length === 0) {
+            throw new Error("Email not found");
+          } else if (res.rows[0].password !== args.password) {
+            throw new Error("Invalid password");
+          }
+
           return res.rows[0];
         },
       },
