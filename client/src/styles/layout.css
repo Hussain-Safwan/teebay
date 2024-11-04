@@ -1,0 +1,21 @@
+.navbar {
+  background: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+.logo {
+  font-size: 25px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.user-profile {
+  cursor: pointer;
+  margin-top: 7.5px;
+}
+
+.contents {
+  width: 50%;
+  margin: auto;
+}
