@@ -57,6 +57,43 @@ const QueryRoot = new graphql.GraphQLObjectType({
           return res.rows[0];
         },
       },
+
+      product_by_user_id: {
+        type: new graphql.GraphQLList(Product),
+        args: { user_id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
+        resolve: async (parent, args, context, resolveInfo) => {
+          const res = await client.query(
+            `select * from product where product.user_id = ${args.user_id}`
+          );
+          return res.rows;
+        },
+      },
+
+      product_by_buyer_id: {
+        type: new graphql.GraphQLList(Product),
+        args: {
+          bought_by: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) },
+        },
+        resolve: async (parent, args, context, resolveInfo) => {
+          const res = await client.query(
+            `select * from product where product.bought_by = ${args.bought_by}`
+          );
+          return res.rows;
+        },
+      },
+
+      product_by_renter_id: {
+        type: new graphql.GraphQLList(Product),
+        args: {
+          rented_by: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) },
+        },
+        resolve: async (parent, args, context, resolveInfo) => {
+          const res = await client.query(
+            `select * from product where product.rented_by = ${args.rented_by}`
+          );
+          return res.rows;
+        },
+      },
     };
   },
 });
