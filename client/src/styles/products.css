@@ -1,10 +1,11 @@
 .product-list {
   margin-top: 30px;
+  width: 100%;
 }
 
 .product-card {
   cursor: pointer;
-  width: 100%;
+  width: 92.5%;
   border: 1px solid #ddd;
   margin-top: 15px;
   padding: 20px 40px;
