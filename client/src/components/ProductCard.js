@@ -5,7 +5,9 @@ import ConfirmModal from "./ConfirmModal";
 const ProductCard = () => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    console.log("deleted");
+  };
 
   const closeConfirmModal = () => setOpenConfirmModal(false);
 
@@ -13,8 +15,12 @@ const ProductCard = () => {
     <div className="product-card">
       <ConfirmModal
         open={openConfirmModal}
-        handleClickOpen={handleDelete}
+        handleAction={handleDelete}
         handleClose={closeConfirmModal}
+        title={"Delete Product"}
+        message={"Are you sure you want to delete this product?"}
+        actionBtnText={"Delete"}
+        cancelBtnText={"Cancel"}
       />
       <div className="first-row">
         <div>

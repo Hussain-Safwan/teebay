@@ -6,7 +6,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function ConfirmModal({ open, handleClickOpen, handleClose }) {
+export default function ConfirmModal({
+  open,
+  handleAction,
+  handleClose,
+  title,
+  message,
+  actionBtnText,
+  cancelBtnText,
+}) {
   return (
     <React.Fragment>
       <Dialog
@@ -15,19 +23,16 @@ export default function ConfirmModal({ open, handleClickOpen, handleClose }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            {message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleAction}>{actionBtnText}</Button>
           <Button onClick={handleClose} autoFocus>
-            Agree
+            {cancelBtnText}
           </Button>
         </DialogActions>
       </Dialog>
