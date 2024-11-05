@@ -104,18 +104,24 @@ const ProductForm = ({ values, setValues }) => {
         <br />
         <div className="price-field">
           <TextField
+            type="number"
             value={price}
             name="price"
             placeholder="Enter the expected price"
             onChange={(e) => setValues(e.target.name, e.target.value)}
           />
           <TextField
+            type="number"
             value={rentingPrice}
             name="rentingPrice"
             placeholder="Enter unit price for renting"
             onChange={(e) => setValues(e.target.name, e.target.value)}
           />
-          <select>
+          <select
+            value={rentingPriceUnit}
+            name="rentingPriceUnit"
+            onChange={(e) => setValues(e.target.name, e.target.value)}
+          >
             <option>Day</option>
             <option>Month</option>
           </select>
@@ -148,6 +154,10 @@ export default function ProductAddEditModal({
     setValues((values) => ({ ...values, [name]: value }));
   };
 
+  const submit = () => {
+    console.log(values);
+  };
+
   return (
     <React.Fragment>
       <Dialog
@@ -169,7 +179,7 @@ export default function ProductAddEditModal({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAction}>{actionBtnText}</Button>
+          <Button onClick={submit}>{actionBtnText}</Button>
           <Button onClick={handleClose} autoFocus>
             {cancelBtnText}
           </Button>
