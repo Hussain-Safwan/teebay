@@ -11,12 +11,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
+    "@mui/styled-engine-sc": "^6.1.6",
     "express": "^4.21.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.9.0",
     "graphql-type-json": "^0.3.2",
     "join-monster": "^4.0.0",
     "nodemon": "^3.1.7",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "styled-components": "^6.1.13"
   }
 }

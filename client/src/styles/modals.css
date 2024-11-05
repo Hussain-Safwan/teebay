@@ -21,3 +21,9 @@
 .summary-item {
   margin-top: 10px;
 }
+
+.rental {
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+}

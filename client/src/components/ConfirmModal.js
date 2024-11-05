@@ -5,8 +5,30 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const RentalPeriod = () => {};
+const RentalPeriod = () => {
+  const [dates, setDates] = React.useState({
+    start: new Date(),
+    end: new Date(),
+  });
+
+  return (
+    <div className="rental">
+      <label>From</label>
+      <DatePicker
+        selected={dates.start}
+        onChange={(date) => setDates((prev) => ({ ...prev, ["start"]: date }))}
+      />
+      <label>To</label>
+      <DatePicker
+        selected={dates.end}
+        onChange={(date) => setDates((prev) => ({ ...prev, ["end"]: date }))}
+      />
+    </div>
+  );
+};
 
 export default function ConfirmModal({
   open,
@@ -35,7 +57,7 @@ export default function ConfirmModal({
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {rental ? <></> : { message }}
+            {rental ? <RentalPeriod /> : { message }}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
