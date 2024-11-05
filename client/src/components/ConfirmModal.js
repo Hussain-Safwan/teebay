@@ -63,7 +63,11 @@ export default function ConfirmModal({
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {rental ? <RentalPeriod setHeight={setHeight} /> : { message }}
+            {rental ? (
+              <RentalPeriod setHeight={setHeight} />
+            ) : (
+              <span>{message}</span>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

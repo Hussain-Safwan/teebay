@@ -4,10 +4,16 @@ import { Button } from "@mui/material";
 import ConfirmModal from "./ConfirmModal";
 
 const ProductDetails = () => {
+  const [openBuyModal, setOpenBuyModal] = useState(false);
   const [openRentModal, setOpenRentModal] = useState(false);
   const [rentalPeriod, setRentalPreiod] = useState();
+
+  const handleBuyModalClose = () => setOpenBuyModal(false);
+  const submiBuyRequest = () => {};
+
   const handleRentModalClose = () => setOpenRentModal(false);
   const submitRentingRequest = () => {};
+
   return (
     <div className="product-card details">
       <ConfirmModal
@@ -19,6 +25,18 @@ const ProductDetails = () => {
         cancelBtnText={"Go back"}
         rental={true}
       />
+
+      <ConfirmModal
+        open={openBuyModal}
+        title={"Confirm purchase"}
+        message={"Are you sure you want to buy this product"}
+        handleAction={submiBuyRequest}
+        handleClose={handleBuyModalClose}
+        actionBtnText={"Yes"}
+        cancelBtnText={"No"}
+        rental={false}
+      />
+
       <div className="first-row">
         <div>
           <h3>ASUS ZenBook</h3>
@@ -40,7 +58,9 @@ const ProductDetails = () => {
           <Button variant="outlined" onClick={() => setOpenRentModal(true)}>
             Rent
           </Button>
-          <Button variant="outlined">Buy</Button>
+          <Button variant="outlined" onClick={() => setOpenBuyModal(true)}>
+            Buy
+          </Button>
         </div>
       </div>
     </div>
