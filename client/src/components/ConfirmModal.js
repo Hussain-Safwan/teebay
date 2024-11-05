@@ -6,6 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+const RentalPeriod = () => {};
+
 export default function ConfirmModal({
   open,
   handleAction,
@@ -14,6 +16,7 @@ export default function ConfirmModal({
   message,
   actionBtnText,
   cancelBtnText,
+  rental,
 }) {
   return (
     <React.Fragment>
@@ -22,18 +25,24 @@ export default function ConfirmModal({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            width: "200%",
+            maxWidth: "720px!important",
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {message}
+            {rental ? <></> : { message }}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAction}>{actionBtnText}</Button>
           <Button onClick={handleClose} autoFocus>
             {cancelBtnText}
           </Button>
+          <Button onClick={handleAction}>{actionBtnText}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
