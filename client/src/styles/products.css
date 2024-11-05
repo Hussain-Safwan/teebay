@@ -34,3 +34,17 @@
   display: flex;
   justify-content: space-between;
 }
+
+.details {
+  cursor: default;
+  border: none;
+}
+.details:hover {
+  border: none;
+}
+.details .first-row {
+  padding: 30px 0;
+}
+.details .footer {
+  margin-top: 100px;
+}

@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import "../styles/layout.css";
 import LandingPage from "./LandingPage";
 import UserProfile from "./UserProfile";
+import ProductDetails from "./ProductDetails";
 
 const Layout = () => {
   return (
@@ -14,6 +15,7 @@ const Layout = () => {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/product" element={<ProductDetails />} />
           </Routes>
         </BrowserRouter>
       </div>
