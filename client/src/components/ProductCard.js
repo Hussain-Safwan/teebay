@@ -3,7 +3,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ConfirmModal from "./ConfirmModal";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
+  const {
+    title,
+    description,
+    categories,
+    creating_date,
+    selling_price,
+    renting_price,
+    renting_price_unit,
+  } = product;
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
   const handleDelete = () => {
@@ -25,24 +34,21 @@ const ProductCard = () => {
       />
       <div className="first-row">
         <div>
-          <h3>ASUS ZenBook</h3>
+          <h3>{title}</h3>
         </div>
         <div onClick={() => setOpenConfirmModal(true)}>
           <DeleteIcon />
         </div>
       </div>
-      <div className="categories sub">Categories</div>
-      <div className="price sub">Price</div>
+      <div className="categories sub">{`Categories: ${categories
+        .split("#")
+        .join(", ")}`}</div>
+      <div className="price sub">{`Price: ${selling_price} | Rent: $ ${renting_price} per ${renting_price_unit}`}</div>
 
-      <div className="description">
-        You can configure the SwipeableDrawer to have a visible edge when
-        closed. If you are on a desktop, you can toggle the drawer with the
-        "OPEN" button. If you are on mobile, you can open the demo in
-        CodeSandbox ("edit" icon) and swipe.
-      </div>
+      <div className="description">{description}</div>
 
       <div className="footer sub">
-        <div className="date">Nov 04, 2024</div>
+        <div className="date">{new Date(creating_date).toString()}</div>
         <div className="views">
           <RemoveRedEyeIcon />
           <span>156</span>
