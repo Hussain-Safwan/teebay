@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ConfirmModal from "./ConfirmModal";
 
 const ProductCard = () => {
@@ -42,7 +43,10 @@ const ProductCard = () => {
 
       <div className="footer sub">
         <div className="date">Nov 04, 2024</div>
-        <div className="views">156</div>
+        <div className="views">
+          <RemoveRedEyeIcon />
+          <span>156</span>
+        </div>
       </div>
     </div>
   );

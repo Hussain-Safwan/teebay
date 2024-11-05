@@ -1,0 +1,16 @@
+.product-form {
+  width: 100%;
+}
+
+.form-field {
+  margin-top: 20px;
+}
+
+.price-field {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-field textarea {
+  width: 100%;
+}
