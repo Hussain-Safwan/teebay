@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const RentalPeriod = () => {
+const RentalPeriod = ({ setHeight }) => {
   const [dates, setDates] = React.useState({
     start: new Date(),
     end: new Date(),
@@ -20,11 +20,15 @@ const RentalPeriod = () => {
       <DatePicker
         selected={dates.start}
         onChange={(date) => setDates((prev) => ({ ...prev, ["start"]: date }))}
+        onFocus={() => setHeight((item) => "400px")}
+        onBlur={() => setHeight("auto")}
       />
       <label>To</label>
       <DatePicker
         selected={dates.end}
         onChange={(date) => setDates((prev) => ({ ...prev, ["end"]: date }))}
+        onFocus={() => setHeight((item) => "400px")}
+        onBlur={() => setHeight("auto")}
       />
     </div>
   );
@@ -40,6 +44,7 @@ export default function ConfirmModal({
   cancelBtnText,
   rental,
 }) {
+  const [height, setHeight] = React.useState("auto");
   return (
     <React.Fragment>
       <Dialog
@@ -51,13 +56,14 @@ export default function ConfirmModal({
           sx: {
             width: "200%",
             maxWidth: "720px!important",
+            height: height,
           },
         }}
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {rental ? <RentalPeriod /> : { message }}
+            {rental ? <RentalPeriod setHeight={setHeight} /> : { message }}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
