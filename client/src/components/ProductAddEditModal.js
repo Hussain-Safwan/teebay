@@ -27,50 +27,41 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
+const categories = [
+  "Electronics",
+  "Furniture",
+  "Home Appliances",
+  "Sporting Goods",
+  "Outdoor",
 ];
 
 const MultipleSelectCheckmarks = () => {
-  const [personName, setPersonName] = React.useState([]);
+  const [selectedCategories, setSelectedCategories] = React.useState([]);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setSelectedCategories(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={personName}
+          value={selectedCategories}
           onChange={handleChange}
           input={<OutlinedInput label="Tag" />}
           renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.includes(name)} />
-              <ListItemText primary={name} />
+          {categories.map((item) => (
+            <MenuItem key={item} value={item}>
+              <Checkbox checked={selectedCategories.includes(item)} />
+              <ListItemText primary={item} />
             </MenuItem>
           ))}
         </Select>
@@ -79,12 +70,16 @@ const MultipleSelectCheckmarks = () => {
   );
 };
 
-const ProductForm = () => {
+const ProductForm = ({ values, setValues }) => {
+  const { title, description, price, rentingPrice, rentingPriceUnit } = values;
   return (
     <div className="product-form">
       <div className="form-field">
         <label>Title</label>
         <TextField
+          value={title}
+          name="title"
+          onChange={(e) => setValues(e.target.name, e.target.value)}
           placeholder="Enter title of the product"
           sx={{ width: "100%" }}
         />
@@ -96,14 +91,30 @@ const ProductForm = () => {
       <div className="form-field">
         <label>Description</label>
         <br />
-        <textarea rows={5} placeholder="Enter the description" />
+        <textarea
+          value={description}
+          name="description"
+          rows={5}
+          placeholder="Enter the description"
+          onChange={(e) => setValues(e.target.name, e.target.value)}
+        />
       </div>
       <div className="form-field">
         <label>Price</label>
         <br />
         <div className="price-field">
-          <TextField placeholder="Enter the expected price" />
-          <TextField placeholder="Enter unit price for renting" />
+          <TextField
+            value={price}
+            name="price"
+            placeholder="Enter the expected price"
+            onChange={(e) => setValues(e.target.name, e.target.value)}
+          />
+          <TextField
+            value={rentingPrice}
+            name="rentingPrice"
+            placeholder="Enter unit price for renting"
+            onChange={(e) => setValues(e.target.name, e.target.value)}
+          />
           <select>
             <option>Day</option>
             <option>Month</option>
@@ -122,36 +133,48 @@ export default function ProductAddEditModal({
   message,
   actionBtnText,
   cancelBtnText,
+  edit,
+  previousState,
 }) {
+  const [values, setValues] = React.useState({
+    title: edit ? previousState.title : "",
+    description: edit ? previousState.description : "",
+    price: edit ? previousState.price : 0,
+    rentingPrice: edit ? previousState.rentingPrice : 0,
+    rentingPriceUnit: edit ? previousState.rentingPriceUnit : "",
+  });
+
+  const handleChanges = (name, value) => {
+    setValues((values) => ({ ...values, [name]: value }));
+  };
+
   return (
     <React.Fragment>
-      <form>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          PaperProps={{
-            sx: {
-              width: "200%",
-              maxWidth: "720px!important",
-            },
-          }}
-        >
-          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <ProductForm />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleAction}>{actionBtnText}</Button>
-            <Button onClick={handleClose} autoFocus>
-              {cancelBtnText}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </form>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            width: "200%",
+            maxWidth: "720px!important",
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <ProductForm values={values} setValues={handleChanges} />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAction}>{actionBtnText}</Button>
+          <Button onClick={handleClose} autoFocus>
+            {cancelBtnText}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }

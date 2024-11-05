@@ -23,6 +23,7 @@ const UserProfile = () => {
         title={"Add Product"}
         actionBtnText={"Submit"}
         cancelBtnText={"Cancel"}
+        edit={false}
       />
       <div className="first-row">
         <h2>My Products</h2>
