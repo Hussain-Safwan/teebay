@@ -14,3 +14,10 @@
 .form-field textarea {
   width: 100%;
 }
+
+.summary-contents {
+  padding: 10px 20px;
+}
+.summary-item {
+  margin-top: 10px;
+}

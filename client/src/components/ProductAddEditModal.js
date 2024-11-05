@@ -131,6 +131,29 @@ const ProductForm = ({ values, setValues }) => {
   );
 };
 
+const Summary = ({ values }) => {
+  const { title, description, price, rentingPrice, rentingPriceUnit } = values;
+
+  return (
+    <div>
+      <div>
+        <h2>Summary</h2>
+      </div>
+      <div className="summary-contents">
+        <span className="summary-item">Title: {title}</span>
+        <br />
+        <span className="summary-item">Categories:</span>
+        <br />
+        <span className="summary-item">Description: {description}</span>
+        <br />
+        <span className="summary-item">
+          Price: {price}, To rent {rentingPrice} per {rentingPriceUnit}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export default function ProductAddEditModal({
   open,
   handleAction,
@@ -149,6 +172,8 @@ export default function ProductAddEditModal({
     rentingPrice: edit ? previousState.rentingPrice : 0,
     rentingPriceUnit: edit ? previousState.rentingPriceUnit : "",
   });
+
+  const [showSummary, setShowSummary] = React.useState(false);
 
   const handleChanges = (name, value) => {
     setValues((values) => ({ ...values, [name]: value }));
@@ -175,14 +200,26 @@ export default function ProductAddEditModal({
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <ProductForm values={values} setValues={handleChanges} />
+            {showSummary ? (
+              <Summary values={values} />
+            ) : (
+              <ProductForm values={values} setValues={handleChanges} />
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={submit}>{actionBtnText}</Button>
-          <Button onClick={handleClose} autoFocus>
-            {cancelBtnText}
-          </Button>
+          {showSummary ? (
+            <Button onClick={submit}>{actionBtnText}</Button>
+          ) : (
+            <Button onClick={() => setShowSummary(true)}>Next</Button>
+          )}
+          {showSummary ? (
+            <Button onClick={() => setShowSummary(false)} autoFocus>
+              Go Back
+            </Button>
+          ) : (
+            <Button onClick={handleClose}>{cancelBtnText}</Button>
+          )}
         </DialogActions>
       </Dialog>
     </React.Fragment>
