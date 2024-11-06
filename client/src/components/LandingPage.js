@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import ProductList from "./ProductList";
 import { gql, useQuery } from "@apollo/client";
-import { useApolloClient } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {

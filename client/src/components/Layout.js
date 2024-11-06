@@ -10,10 +10,10 @@ import Signup from "./Signup";
 
 const Layout = () => {
   return (
-    <div>
-      <Navbar />
-      <div className="contents">
-        <BrowserRouter>
+    <BrowserRouter>
+      <div>
+        <Navbar />
+        <div className="contents">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/profile" element={<UserProfile />} />
@@ -21,9 +21,9 @@ const Layout = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
-        </BrowserRouter>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 };
 

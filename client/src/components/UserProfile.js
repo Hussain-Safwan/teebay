@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@mui/material";
+import { gql, useQuery } from "@apollo/client";
 
 import ProductList from "./ProductList";
 import "../styles/user-profile.css";
@@ -14,6 +15,29 @@ const UserProfile = () => {
 
   const closeProductModal = () => setOpenProductModal(false);
 
+  const productsQuery = gql`
+    query Product_by_user_id {
+      product_by_user_id(user_id: 1) {
+        product_id
+        title
+        description
+        categories
+        selling_price
+        renting_price
+        renting_price_unit
+        user_id
+        bought_by
+        rented_by
+        creating_date
+        buying_date
+        renting_date
+      }
+    }
+  `;
+  const { error, loading, data } = useQuery(productsQuery);
+  if (error) return <div>Error</div>;
+  if (loading) return <div>Loading...</div>;
+  console.log(data);
   return (
     <div>
       <ProductAddEditModal
@@ -36,7 +60,7 @@ const UserProfile = () => {
           </Button>
         </div>
       </div>
-      <ProductList />
+      <ProductList productList={data.product_by_user_id} />
     </div>
   );
 };
