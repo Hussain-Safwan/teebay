@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProductList from "./ProductList";
 import { gql, useQuery } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const userQuery = gql`
+    query User {
+      user @client {
+        firstname
+      }
+    }
+  `;
+  const res = useQuery(userQuery);
+  console.log(res.data);
+
+  if (!res?.data) {
+    navigate("/login");
+  }
+
   const productsQuery = gql`
     query Products {
       products {
@@ -26,7 +43,6 @@ const LandingPage = () => {
   if (error) return <div>Error</div>;
   if (loading) return <div>Loading...</div>;
 
-  console.log(data);
   return (
     <div>
       <h2>All Products</h2>
